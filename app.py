@@ -1,4 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 from mangum import Mangum
@@ -15,6 +16,15 @@ logger = setup_logger("SchemeSense-API")
 
 app = FastAPI(title="SchemeSense API")
 handler = Mangum(app)
+
+# Add CORS Middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For dev, allow all. In production, restrict to specific domains.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 def startup_event():
